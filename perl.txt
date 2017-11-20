@@ -1,0 +1,41 @@
+#!/usr/bin/perl
+
+use strict;
+
+use warnings;
+
+use File::Path qw(make_path);
+
+use File::Copy;
+
+
+my $directory = './';
+
+
+opendir (DIR, $directory) or die $!;
+
+
+while (my $file = readdir(DIR)){
+
+        
+next if ($file =~ m/^\./);
+
+    
+# We only want files
+
+next unless (-f "$directory/$file");
+
+
+# Use a regular expression to find files ending in .txt
+
+next unless ($file =~ m/\..+$/);
+ 
+print "$file\n";
+my $ext = substr($file, index($file, '.') + 1, length($file));
+eval { make_path($ext) };
+copy "$file", "$ext/$file";
+
+}
+
+
+closedir(DIR);
